@@ -1,8 +1,7 @@
 
 # agent_run_with_tags
 
-
-#### Table of Contents
+## Table of Contents
 
 1. [Description](#description)
 2. [Setup - The basics of getting started with agent_run_with_tags](#setup)
@@ -16,12 +15,11 @@
 
 ## Description
 
-The Task in this module fills a hole in orchestrators native abilities. It allows you to run puppet agent with the --tags options on linux nodes running a bash shell.
+The Task in this module fills a hole in orchestrators native abilities. It allows you to run puppet agent with the `--tags` options on linux nodes running a bash shell.
 
-By default it requires just one tag to be passed as an option, it allows up to 2. there are also 2 additional optional parameters param1 and param2 which can be used to pass standard puppet agent flags, such as --noop or --debug
+By default it requires a comma separated list of tags (no spaces). There are also 2 additional optional parameters param1 and param2 which can be used to pass standard puppet agent flags, such as `--noop` or `--debug`
 
 ## Setup
-
 
 ### Beginning with agent_run_with_tags  
 
@@ -29,21 +27,16 @@ Install the module, the tasks will be populated in the tasks dropdown in the PE 
 
 ## Usage
 
-This task can be run against any linux node with a bash shell, it has 4 parameters:
+This task can be run against any linux node with a bash shell, it takes up to 3 parameters:
 
-tag1 - mandatory the tag you want to run the agent run with
-tag2 - an optional second tag
-param1 - an optional param that can be used to pass any agent flag, valid options include --debug --noop --fingerprint
-param2 - a second optional parameter incase one is not enough
-
-
+* `tags` (mandatory) - a comma separated list of tags (no spaces)
+* `param1` (optional) parameter that can be used to pass any agent flag, valid options include `--debug --noop --fingerprint`
+* `param2` (optional) a second parameter incase one is not enough
 
 ## Reference
 
 ## Limitations
 
-restricted to use on linux platforms with a bash shell
+Restricted to use on linux platforms with a bash shell
 
 ## Development
-
-

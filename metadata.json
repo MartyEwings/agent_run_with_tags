@@ -1,6 +1,6 @@
 {
   "name": "martyewings-agent_run_with_tags",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "martyewings",
   "summary": "Allows remote running of puppet agents with up to two --tags",
   "license": "Apache-2.0",

@@ -1,23 +1,19 @@
 {
   "puppet_task_version": 1,
   "supports_noop": false,
-  "description": "passes up to 2 tags to a puppet agent run, and allows for 2 addtional parameters eg --debug --nooop --no-noop",
+  "description": "passes a comma separated list of tags (no spaces) to a puppet agent run, and allows for 2 addtional parameters eg --debug --noop --no-noop",
   "parameters": {
-  "tag1": {
-         "description": "first tag, mandatory",
-         "type": "String[1]"
-},
-  "tag2": {
-         "description": "second tag, optional",
-         "type": "Optional[String[1]]"
-} , 
-  "param1": {
-         "description": "optional additional parameter eg --debug",
-         "type": "Optional[String[1]]"
-},
-  "param2": {
-         "description": "optional additional parameter eg --noop",
-         "type": "Optional[String[1]]"
-}
-}
+    "tags": {
+      "description": "comma separated list of tags (no spaces), mandatory",
+      "type": "String[1]"
+    },
+    "param1": {
+      "description": "optional additional parameter eg --noop",
+      "type": "Optional[String[1]]"
+    },
+    "param2": {
+      "description": "optional additional parameter eg --debug",
+      "type": "Optional[String[1]]"
+    }
+  }
 }
