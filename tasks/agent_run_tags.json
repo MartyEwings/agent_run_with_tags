@@ -1,30 +1,16 @@
 {
   "puppet_task_version": 1,
   "supports_noop": false,
-  "description": "Triggers a Puppet agent run restricted to a comma-separated list of tags, with optional extra agent flags. Runs on Linux, macOS and Windows.",
+  "description": "Triggers a Puppet agent run restricted to a comma-separated list of tags, with optional extra agent flags. A single Ruby implementation runs on Linux, macOS and Windows via the Puppet agent's Ruby.",
   "parameters": {
     "tags": {
       "description": "Comma separated list of tags with no spaces, eg 'profile::ntp,profile::ssh'. Mandatory.",
       "type": "Pattern[/\\A[a-z0-9_:][a-z0-9_:,.\\-]*\\z/]"
     },
     "flags": {
-      "description": "Optional, space-separated additional puppet agent flags, eg '--noop --debug'. Replaces the legacy param1/param2 parameters.",
-      "type": "Optional[Pattern[/\\A--?[a-z0-9][a-z0-9\\-_=.:\\/]*( +--?[a-z0-9][a-z0-9\\-_=.:\\/]*)*\\z/]]"
+      "description": "Optional list of additional puppet agent flags, eg ['--noop', '--debug']. Replaces the legacy param1/param2 parameters.",
+      "type": "Optional[Array[Pattern[/\\A--?[a-z0-9][a-z0-9\\-_=.:\\/]*\\z/]]]"
     }
   },
-  "input_method": "environment",
-  "implementations": [
-    {
-      "name": "agent_run_tags.sh",
-      "requirements": [
-        "shell"
-      ]
-    },
-    {
-      "name": "agent_run_tags.ps1",
-      "requirements": [
-        "powershell"
-      ]
-    }
-  ]
+  "input_method": "stdin"
 }

@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 2.1.0
+
+**Features**
+
+* Consolidated the task into a single, cross-platform Ruby implementation
+  (`tasks/agent_run_tags.rb`) that runs on Linux, macOS and Windows using the
+  Puppet agent's bundled Ruby. This replaces the separate shell and PowerShell
+  scripts introduced in 2.0.0 with one file to maintain.
+* The task now reads its parameters from stdin (`input_method: stdin`).
+
+**Breaking changes**
+
+* The `flags` parameter is now an `Array[String]` (one flag per element, eg
+  `flags=["--noop", "--debug"]`) rather than a single space-separated string.
+
 ## Release 2.0.0
 
 **Features**

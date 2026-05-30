@@ -16,15 +16,6 @@ PuppetLint.configuration.send('disable_single_quote_string_with_variables')
 PuppetLint.configuration.fail_on_warnings = true
 PuppetLint.configuration.ignore_paths = [".vendor/**/*.pp", ".bundle/**/*.pp", "pkg/**/*.pp", "spec/**/*.pp", "tests/**/*.pp", "types/**/*.pp", "vendor/**/*.pp"]
 
-desc 'Syntax check shellscripts'
-task :shellcheck do
-  Dir['{tasks,files}/**/*.sh'].each do |shell_file|
-    sh "shellcheck #{shell_file}" do |ok, res|
-        exit res.exitstatus unless ok
-    end
-  end
-end
-
 desc 'Check task names'
  task :tasknames do
    errors = Dir['tasks/**/*'].map do |task|
