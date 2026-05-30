@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: PDK validate & unit tests
+    runs-on: ubuntu-latest
+    container:
+      image: puppet/pdk:3.4.0.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: PDK validate
+        run: pdk validate --format text
+
+      - name: PDK unit tests
+        run: pdk test unit
+
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Scans the repository for shell scripts and lints any it finds. The task
+      # is currently pure Ruby, so this is a no-op today but guards any shell
+      # scripts added in future.
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
