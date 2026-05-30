@@ -27,11 +27,11 @@ from the Puppet Enterprise console or with Bolt, neither lets you scope that run
 to `--tags` out of the box. This task gives you that control on demand, without
 having to log in to each node.
 
-The task ships as **one task with two implementations** — a Bash script for
-Linux/Unix and macOS, and a PowerShell script for Windows. The task runner picks
-the correct implementation automatically based on the target's available
-features (`shell` vs `powershell`), so operators only ever see and select a
-single task.
+The task is implemented as **a single Ruby script** that runs identically on
+Linux, macOS and Windows. Because a Puppet agent is required on every target
+anyway (the task drives `puppet agent`), the agent's bundled Ruby is always
+present to execute it — there is no separate shell or PowerShell version to
+maintain, and operators only ever see and select a single task.
 
 ## Use cases
 
@@ -84,10 +84,11 @@ Run a tagged agent run across a group of Linux and Windows targets:
 bolt task run agent_run_with_tags tags='profile::ntp,profile::ssh' --targets all_nodes
 ```
 
-Preview changes for a single tag in no-op mode with verbose output:
+Preview changes for a single tag in no-op mode with verbose output (`flags`
+is an array, supplied as JSON on the Bolt command line):
 
 ```bash
-bolt task run agent_run_with_tags tags='profile::firewall' flags='--noop --debug' --targets web_servers
+bolt task run agent_run_with_tags tags='profile::firewall' flags='["--noop", "--debug"]' --targets web_servers
 ```
 
 The same invocation works against Windows targets reached over WinRM — no
@@ -98,11 +99,11 @@ separate task or different parameters are required.
 | Parameter | Required | Type | Description |
 | --------- | -------- | ---- | ----------- |
 | `tags`  | Yes | String | Comma-separated list of tags **with no spaces**, eg `profile::ntp,profile::ssh`. |
-| `flags` | No  | String | Space-separated additional `puppet agent` flags, eg `--noop --debug --no-noop`. |
+| `flags` | No  | Array[String] | Additional `puppet agent` flags, one per element, eg `["--noop", "--debug"]`. In the PE console each flag is entered as a separate list item. |
 
 > **Note on upgrading from 1.x:** the previous `param1` / `param2` parameters
-> have been replaced by a single `flags` parameter. Instead of
-> `param1='--noop' param2='--debug'`, pass `flags='--noop --debug'`.
+> have been replaced by a single `flags` array. Instead of
+> `param1='--noop' param2='--debug'`, pass `flags=["--noop", "--debug"]`.
 
 The task always runs the agent in test mode (`puppet agent --test`) so that the
 run executes immediately in the foreground and its exit code is returned to the
@@ -110,13 +111,15 @@ orchestrator.
 
 ## Reference
 
-This module contains a single Bolt task, `agent_run_with_tags::agent_run_tags`,
-with implementations for:
+This module contains a single Bolt task,
+`agent_run_with_tags::agent_run_tags`, implemented as one Ruby script
+(`tasks/agent_run_tags.rb`). It reads its parameters from stdin and runs on
+every supported platform using the Puppet agent's bundled Ruby:
 
-* `agent_run_tags.sh` — used on targets exposing the `shell` feature (Linux,
-  Unix, macOS).
-* `agent_run_tags.ps1` — used on targets exposing the `powershell` feature
-  (Windows).
+* On *nix the script's shebang (`#!/opt/puppetlabs/puppet/bin/ruby`) selects the
+  agent Ruby.
+* On Windows and via the Puppet Enterprise orchestrator, the agent Ruby runtime
+  runs the task automatically.
 
 ## Limitations
 
@@ -136,6 +139,3 @@ Contributions are welcome via pull request. This module is maintained with the
 pdk validate    # metadata, task and ruby validation
 pdk test unit   # run the spec suite
 ```
-
-The `rake shellcheck` task is also available to lint the shell implementation
-(requires `shellcheck` to be installed).
