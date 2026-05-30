@@ -1,19 +1,30 @@
 {
   "puppet_task_version": 1,
   "supports_noop": false,
-  "description": "passes a comma separated list of tags (no spaces) to a puppet agent run, and allows for 2 addtional parameters eg --debug --noop --no-noop",
+  "description": "Triggers a Puppet agent run restricted to a comma-separated list of tags, with optional extra agent flags. Runs on Linux, macOS and Windows.",
   "parameters": {
     "tags": {
-      "description": "comma separated list of tags (no spaces), mandatory",
-      "type": "String[1]"
+      "description": "Comma separated list of tags with no spaces, eg 'profile::ntp,profile::ssh'. Mandatory.",
+      "type": "Pattern[/\\A[a-z0-9_:][a-z0-9_:,.\\-]*\\z/]"
     },
-    "param1": {
-      "description": "optional additional parameter eg --noop",
-      "type": "Optional[String[1]]"
-    },
-    "param2": {
-      "description": "optional additional parameter eg --debug",
-      "type": "Optional[String[1]]"
+    "flags": {
+      "description": "Optional, space-separated additional puppet agent flags, eg '--noop --debug'. Replaces the legacy param1/param2 parameters.",
+      "type": "Optional[Pattern[/\\A--?[a-z0-9][a-z0-9\\-_=.:\\/]*( +--?[a-z0-9][a-z0-9\\-_=.:\\/]*)*\\z/]]"
     }
-  }
+  },
+  "input_method": "environment",
+  "implementations": [
+    {
+      "name": "agent_run_tags.sh",
+      "requirements": [
+        "shell"
+      ]
+    },
+    {
+      "name": "agent_run_tags.ps1",
+      "requirements": [
+        "powershell"
+      ]
+    }
+  ]
 }
