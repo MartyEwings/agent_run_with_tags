@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## Release 2.2.0
+
+**Features**
+
+* Added Puppet 9 support (Ruby 4.x agent runtime). The supported Puppet range
+  is now `>= 7.24.0 < 10.0.0`.
+* Updated to PDK 4.0.1 templates.
+* Refreshed supported operating systems to match Puppet Core 9.1.0 agent
+  platforms: RHEL, Rocky and AlmaLinux 8/9/10, Oracle Linux 8/9, Amazon
+  Linux 2023, Debian 11/12/13, Ubuntu 22.04/24.04/26.04, SLES 12/15, Fedora 41,
+  macOS 14/15/26 and Windows 11 and Server 2016/2019/2022/2025. Removed
+  end-of-life platforms (CentOS, EL7, Ubuntu 20.04, Fedora 38/40, macOS 12/13
+  and Windows 10).
+* The task logic is now wrapped in an `AgentRunTags` module and covered by unit
+  tests. It no longer requires `English`.
+* CI runs validation and unit tests on Puppet 8 / Ruby 3.2 and Puppet 9 /
+  Ruby 4.0, using a `PUPPET_FORGE_TOKEN` secret for puppetcore gems.
+
 ## Release 2.1.0
 
 **Features**
