@@ -10,19 +10,42 @@ on:
 
 jobs:
   validate:
-    name: PDK validate & unit tests
+    name: Validate & unit tests (Puppet ${{ matrix.puppet }}, Ruby ${{ matrix.ruby }})
     runs-on: ubuntu-latest
-    container:
-      image: puppet/pdk:3.4.0.1
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - puppet: '8'
+            ruby: '3.2'
+          - puppet: '9'
+            ruby: '4.0'
+    env:
+      # Puppet 8.11+ and 9 gems are published only to the authenticated
+      # puppetcore gem source. PUPPET_FORGE_TOKEN is a Forge API key stored as
+      # a repository secret (not available to PRs from forks).
+      PUPPET_FORGE_TOKEN: ${{ secrets.PUPPET_FORGE_TOKEN }}
+      BUNDLE_RUBYGEMS___PUPPETCORE__PUPPET__COM: forge-key:${{ secrets.PUPPET_FORGE_TOKEN }}
+      PUPPET_GEM_VERSION: '~> ${{ matrix.puppet }}.0'
+      BUNDLE_WITHOUT: system_tests:release_prep
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: PDK validate
-        run: pdk validate --format text
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
 
-      - name: PDK unit tests
-        run: pdk test unit
+      - name: Validate
+        run: bundle exec rake validate rubocop tasknames
+
+      - name: Validate task metadata
+        run: bundle exec ruby -rjson -e 'Dir["tasks/*.json"].each { |f| JSON.parse(File.read(f)) }'
+
+      - name: Unit tests
+        run: bundle exec rake spec
 
   shellcheck:
     name: ShellCheck

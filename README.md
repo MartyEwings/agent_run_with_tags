@@ -126,16 +126,25 @@ every supported platform using the Puppet agent's bundled Ruby:
 * Requires a Puppet agent to be installed on each target.
 * Tag names must be supplied as a single comma-separated string with no spaces.
 * Supported operating systems are listed in
-  [`metadata.json`](metadata.json). The module targets currently supported
-  Puppet 7 and Puppet 8 releases (and the Puppet Enterprise versions that ship
-  them).
+  [`metadata.json`](metadata.json). The module supports Puppet 7, 8 and 9
+  (and the Puppet Enterprise versions that ship them). The task uses only
+  the Ruby standard library, so it runs on every agent Ruby from 2.7 through
+  4.x.
 
 ## Development
 
-Contributions are welcome via pull request. This module is maintained with the
-[Puppet Development Kit (PDK)](https://www.puppet.com/docs/pdk/latest/pdk.html).
+Contributions are welcome via pull request. This module is maintained with
+[PDK](https://www.puppet.com/docs/pdk/latest/pdk.html) 4.x, which bundles
+Ruby 4 and Puppet 9.
 
 ```bash
-pdk validate    # metadata, task and ruby validation
-pdk test unit   # run the spec suite
+pdk validate --puppet-version 9   # metadata, task and ruby validation
+pdk test unit --puppet-version 9  # run the spec suite
 ```
+
+Puppet 8.11+ and Puppet 9 gems are only published to the authenticated
+puppetcore gem source. Testing against them outside the PDK cache requires a
+Forge API key, for example `export PUPPET_FORGE_TOKEN=<key>` and
+`bundle config set --global rubygems-puppetcore.puppet.com forge-key:<key>`.
+GitHub Actions CI reads the key from the `PUPPET_FORGE_TOKEN` repository
+secret.
